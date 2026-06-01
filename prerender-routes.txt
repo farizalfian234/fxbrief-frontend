@@ -1,0 +1,9 @@
+/
+/about
+/privacy
+/terms
+/support
+/login
+/register
+/articles
+/weekly-recap

@@ -1,0 +1,14 @@
+/dist
+/tmp
+/out-tsc
+/node_modules
+npm-debug.log
+yarn-error.log
+.angular/
+.DS_Store
+Thumbs.db
+
+# Internal-only documentation (not committed)
+BUILD_ASSUMPTIONS.md
+DECISIONS.md
+FRONTEND_ARCHITECTURE.md
