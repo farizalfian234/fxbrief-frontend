@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { UserNavbarComponent } from '../navbar/user-navbar.component';
+import { AppFooterComponent } from '../footer/app-footer.component';
 
 @Component({
   selector: 'fx-user-layout',
   standalone: true,
-  imports: [RouterOutlet, UserNavbarComponent],
+  imports: [RouterOutlet, UserNavbarComponent, AppFooterComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
     <div class="flex min-h-screen flex-col bg-surface-muted">
@@ -15,6 +16,7 @@ import { UserNavbarComponent } from '../navbar/user-navbar.component';
           <router-outlet />
         </div>
       </main>
+      <fx-app-footer />
     </div>
   `
 })
