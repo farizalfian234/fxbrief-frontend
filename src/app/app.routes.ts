@@ -36,6 +36,17 @@ export const routes: Routes = [
   },
   {
     path: '',
+    loadComponent: () =>
+      import('./layout/info-layout/info-layout.component').then((m) => m.InfoLayoutComponent),
+    children: [
+      {
+        path: '',
+        loadChildren: () => import('./features/public/info.routes').then((m) => m.INFO_ROUTES)
+      }
+    ]
+  },
+  {
+    path: '',
     canActivate: [authGuard],
     canActivateChild: [authChildGuard],
     loadComponent: () =>
@@ -64,6 +75,15 @@ export const routes: Routes = [
   {
     path: '**',
     loadComponent: () =>
-      import('./features/public/pages/not-found/not-found.component').then((m) => m.NotFoundComponent)
+      import('./layout/info-layout/info-layout.component').then((m) => m.InfoLayoutComponent),
+    children: [
+      {
+        path: '',
+        loadComponent: () =>
+          import('./features/public/pages/not-found/not-found.component').then(
+            (m) => m.NotFoundComponent
+          )
+      }
+    ]
   }
 ];

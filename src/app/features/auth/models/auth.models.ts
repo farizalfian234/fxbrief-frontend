@@ -39,3 +39,17 @@ export interface AuthSession {
   deletionPending: boolean;
   deletionDate?: string;
 }
+
+export interface RequestDeletionResult {
+  userId: number;
+  email: string;
+  deletionRequestedAt: string;
+  deletionDate: string;
+  message: string;
+}
+
+export interface CancelDeletionResult {
+  userId: number;
+  email: string;
+  message: string;
+}

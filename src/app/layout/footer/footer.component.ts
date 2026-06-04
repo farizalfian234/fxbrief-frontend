@@ -12,18 +12,16 @@ import { LogoComponent } from '../../shared/ui/logo.component';
       <div class="mx-auto flex max-w-content flex-col gap-8 px-5 py-10 sm:px-8 md:flex-row md:items-start md:justify-between">
         <div class="space-y-3">
           <fx-logo variant="white" [heightPx]="24" />
-          <p class="max-w-xs text-sm text-navy-200">
-            Structured, AI-assisted forex analysis — clarity before the market opens.
-          </p>
+          <p class="max-w-xs text-sm text-navy-200">Less Noise. Better Setups.</p>
         </div>
 
         <nav class="grid grid-cols-2 gap-x-12 gap-y-2 text-sm sm:grid-cols-3">
-          <a routerLink="/about" class="text-navy-200 transition hover:text-white">About</a>
-          <a routerLink="/support" class="text-navy-200 transition hover:text-white">Support</a>
+          <a routerLink="/about" class="text-navy-200 transition hover:text-white">About/Help</a>
           <a routerLink="/articles" class="text-navy-200 transition hover:text-white">Articles</a>
-          <a routerLink="/weekly-recap" class="text-navy-200 transition hover:text-white">Weekly recap</a>
-          <a routerLink="/privacy" class="text-navy-200 transition hover:text-white">Privacy</a>
+          <a routerLink="/weekly-recap" class="text-navy-200 transition hover:text-white">Weekly Recap</a>
           <a routerLink="/terms" class="text-navy-200 transition hover:text-white">Terms</a>
+          <a routerLink="/privacy" class="text-navy-200 transition hover:text-white">Privacy</a>
+          <a routerLink="/support" class="text-navy-200 transition hover:text-white">Support</a>
         </nav>
       </div>
 
