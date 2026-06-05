@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { SeoService } from '../../../../core/services/seo.service';
 import { messageForError } from '../../../../shared/util/api-error.util';
 import { AdminArticleApiService } from '../../services/admin-article-api.service';
-import { MarkdownService } from '../../services/markdown.service';
+import { MarkdownService } from '../../../../shared/services/markdown.service';
 import {
   ARTICLE_CATEGORIES,
   ArticleCategory,
@@ -198,6 +198,7 @@ function slugify(value: string): string {
               <input
                 type="datetime-local"
                 [(ngModel)]="form.scheduledPublishAt"
+                (ngModelChange)="syncSchedule()"
                 [attr.data-empty]="!form.scheduledPublishAt"
                 data-placeholder="Not scheduled"
                 class="mt-1 block w-full min-w-0 appearance-none rounded-lg border border-surface-border bg-white px-3 py-2 text-sm text-navy-900 outline-none transition focus:border-accent focus:ring-1 focus:ring-accent"
@@ -242,16 +243,25 @@ function slugify(value: string): string {
             </button>
             <button
               type="button"
-              [disabled]="busy()"
-              (click)="publishNow()"
+              [disabled]="busy() || scheduleInPast()"
+              (click)="publishOrSchedule()"
               class="inline-flex items-center justify-center rounded-lg bg-navy-600 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-navy-700 disabled:opacity-60"
             >
-              @if (busy() && action() === 'publish') {
+              @if (busy() && (action() === 'publish' || action() === 'schedule')) {
                 <i class="pi pi-spinner animate-spin"></i>
+              } @else if (isScheduling()) {
+                Schedule
               } @else {
                 Publish Now
               }
             </button>
+            @if (isScheduling()) {
+              @if (scheduleInPast()) {
+                <p class="text-xs text-red-600">Pick a future date and time to schedule.</p>
+              } @else {
+                <p class="text-xs text-navy-400">Will publish automatically at the scheduled time.</p>
+              }
+            }
           </div>
         </div>
       </div>
@@ -329,7 +339,7 @@ export class AdminArticleEditorComponent implements OnInit {
 
   readonly view = signal<View>('ready');
   readonly busy = signal(false);
-  readonly action = signal<'draft' | 'publish' | null>(null);
+  readonly action = signal<'draft' | 'publish' | 'schedule' | null>(null);
   readonly banner = signal('');
   readonly notice = signal('');
   readonly mobileTab = signal<'write' | 'preview'>('write');
@@ -339,6 +349,20 @@ export class AdminArticleEditorComponent implements OnInit {
 
   readonly contentSignal = signal('');
   readonly preview = computed(() => this.markdown.render(this.contentSignal()));
+
+  /** Mirrors form.scheduledPublishAt so button label/state can react to it. */
+  readonly scheduleSignal = signal('');
+  /** A non-empty scheduled-publish field means the primary action is Schedule. */
+  readonly isScheduling = computed(() => this.scheduleSignal().trim().length > 0);
+  /** True only when a date is set and it is not in the future. */
+  readonly scheduleInPast = computed(() => {
+    const raw = this.scheduleSignal().trim();
+    if (!raw) {
+      return false;
+    }
+    const when = new Date(raw).getTime();
+    return Number.isNaN(when) || when <= Date.now();
+  });
 
   form: EditorForm = {
     title: '',
@@ -397,6 +421,7 @@ export class AdminArticleEditorComponent implements OnInit {
       scheduledPublishAt: a.scheduledPublishAt ? a.scheduledPublishAt.slice(0, 16) : ''
     };
     this.contentSignal.set(a.content);
+    this.scheduleSignal.set(this.form.scheduledPublishAt);
   }
 
   onTitleChange(): void {
@@ -410,7 +435,12 @@ export class AdminArticleEditorComponent implements OnInit {
     this.contentSignal.set(this.form.content);
   }
 
-  private buildRequest(status: ArticleStatus): ArticleSaveRequest {
+  /** Keep the schedule signal in sync with the datetime-local field. */
+  syncSchedule(): void {
+    this.scheduleSignal.set(this.form.scheduledPublishAt);
+  }
+
+  private buildRequest(status: ArticleStatus, includeSchedule: boolean): ArticleSaveRequest {
     const tags = this.form.tagsInput
       .split(',')
       .map((t) => t.trim())
@@ -425,9 +455,10 @@ export class AdminArticleEditorComponent implements OnInit {
       featuredImageUrl: this.form.featuredImageUrl.trim() || undefined,
       seoTitle: this.form.seoTitle.trim() || undefined,
       seoDescription: this.form.seoDescription.trim() || undefined,
-      scheduledPublishAt: this.form.scheduledPublishAt
-        ? new Date(this.form.scheduledPublishAt).toISOString()
-        : null,
+      scheduledPublishAt:
+        includeSchedule && this.form.scheduledPublishAt
+          ? new Date(this.form.scheduledPublishAt).toISOString()
+          : null,
       status
     };
   }
@@ -450,16 +481,39 @@ export class AdminArticleEditorComponent implements OnInit {
       return;
     }
     this.action.set('draft');
-    this.persist(this.buildRequest('DRAFT'), 'Draft saved.');
+    // A draft never carries a schedule: strip scheduledPublishAt on save.
+    this.persist(this.buildRequest('DRAFT', false), 'Draft saved.');
   }
 
-  publishNow(): void {
+  /** Primary action: Schedule when a future date is set, otherwise Publish Now. */
+  publishOrSchedule(): void {
+    if (this.isScheduling()) {
+      this.schedule();
+    } else {
+      this.publishNow();
+    }
+  }
+
+  private publishNow(): void {
     this.syncContent();
     if (!this.validate()) {
       return;
     }
     this.action.set('publish');
-    this.persist(this.buildRequest('PUBLISHED'), 'Article published.');
+    this.persist(this.buildRequest('PUBLISHED', false), 'Article published.');
+  }
+
+  private schedule(): void {
+    this.syncContent();
+    if (!this.validate()) {
+      return;
+    }
+    if (this.scheduleInPast()) {
+      this.banner.set('Scheduled time must be in the future.');
+      return;
+    }
+    this.action.set('schedule');
+    this.persist(this.buildRequest('SCHEDULED', true), 'Article scheduled.');
   }
 
   private persist(body: ArticleSaveRequest, success: string): void {

@@ -11,15 +11,6 @@ export const routes: Routes = [
       {
         path: '',
         loadChildren: () => import('./features/public/public.routes').then((m) => m.PUBLIC_ROUTES)
-      },
-      {
-        path: 'articles',
-        loadChildren: () => import('./features/content/content.routes').then((m) => m.ARTICLE_ROUTES)
-      },
-      {
-        path: 'weekly-recap',
-        loadChildren: () =>
-          import('./features/content/content.routes').then((m) => m.WEEKLY_RECAP_ROUTES)
       }
     ]
   },
@@ -42,6 +33,15 @@ export const routes: Routes = [
       {
         path: '',
         loadChildren: () => import('./features/public/info.routes').then((m) => m.INFO_ROUTES)
+      },
+      {
+        path: 'articles',
+        loadChildren: () => import('./features/content/content.routes').then((m) => m.ARTICLE_ROUTES)
+      },
+      {
+        path: 'weekly-recap',
+        loadChildren: () =>
+          import('./features/content/content.routes').then((m) => m.WEEKLY_RECAP_ROUTES)
       }
     ]
   },

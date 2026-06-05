@@ -12,6 +12,8 @@ export const APP_ROUTES = {
   support: '/support',
   forbidden: '/forbidden',
   error: '/error',
+  articles: '/articles',
+  weeklyRecap: '/weekly-recap',
   dashboard: '/dashboard',
   history: '/history',
   account: '/account',
