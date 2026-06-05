@@ -18,5 +18,8 @@ export const APP_ROUTES = {
   adminDashboard: '/admin',
   adminUsers: '/admin/users',
   adminUsage: '/admin/usage',
-  adminFeedback: '/admin/feedback'
+  adminFeedback: '/admin/feedback',
+  adminArticles: '/admin/articles',
+  adminArticleNew: '/admin/articles/new',
+  adminWeeklyRecap: '/admin/weekly-recap'
 } as const;

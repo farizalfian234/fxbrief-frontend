@@ -20,7 +20,7 @@ import { AuthApiService } from '../../features/auth/services/auth-api.service';
           </span>
         </div>
 
-        <nav class="hidden items-center gap-1 md:flex">
+        <nav class="hidden items-center gap-1 lg:flex">
           @for (item of navItems; track item.path) {
             <a
               [routerLink]="item.path"
@@ -41,7 +41,7 @@ import { AuthApiService } from '../../features/auth/services/auth-api.service';
 
         <button
           type="button"
-          class="rounded-lg p-2 text-navy-100 transition hover:bg-navy-700 md:hidden"
+          class="rounded-lg p-2 text-navy-100 transition hover:bg-navy-700 lg:hidden"
           [attr.aria-expanded]="menuOpen()"
           aria-label="Toggle navigation"
           (click)="toggleMenu()"
@@ -51,7 +51,7 @@ import { AuthApiService } from '../../features/auth/services/auth-api.service';
       </div>
 
       @if (menuOpen()) {
-        <nav class="border-t border-navy-700 px-5 py-2 sm:px-8 md:hidden">
+        <nav class="border-t border-navy-700 px-5 py-2 sm:px-8 lg:hidden">
           @for (item of navItems; track item.path) {
             <a
               [routerLink]="item.path"
@@ -83,7 +83,9 @@ export class AdminNavbarComponent {
     { label: 'Dashboard', path: '/admin', exact: true },
     { label: 'Users', path: '/admin/users', exact: false },
     { label: 'Usage', path: '/admin/usage', exact: false },
-    { label: 'Feedback', path: '/admin/feedback', exact: false }
+    { label: 'Feedback', path: '/admin/feedback', exact: false },
+    { label: 'Articles', path: '/admin/articles', exact: false },
+    { label: 'Weekly Recaps', path: '/admin/weekly-recap', exact: false }
   ];
 
   toggleMenu(): void {
