@@ -23,11 +23,13 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "server": "src/main.server.ts",
-            "prerender": {
-              "routesFile": "prerender-routes.txt"
+            "prerender": true,
+            "ssr": {
+              "entry": "server.ts"
             },
-            "ssr": false,
-            "polyfills": ["zone.js"],
+            "polyfills": [
+              "zone.js"
+            ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
