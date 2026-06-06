@@ -400,7 +400,7 @@ export class LandingComponent {
   constructor() {
     const seo = inject(SeoService);
     seo.apply({
-      title: 'FX–Brief — AI-Powered Forex Analysis',
+      title: 'FX–Brief — Less Noise. Better Setups.',
       description:
         'Daily forex market briefings filtered for quality — technical structure, key zones, and fundamental context. Trade only what matters.',
       url: 'https://fx-brief.com/',
@@ -413,7 +413,7 @@ export class LandingComponent {
       url: 'https://fx-brief.com/',
       logo: 'https://fx-brief.com/assets/images/logo-primary.png',
       description:
-        'FX–Brief delivers structured, AI-powered forex analysis reports built for traders who want clarity before the market opens.'
+        'Daily forex market briefings filtered for quality — technical structure, key zones, and fundamental context. Trade only what matters.'
     });
   }
 }
